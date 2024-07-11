@@ -1,0 +1,585 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum AuthProvider {
+  EMAIL
+  PHONE
+  FACEBOOK
+  GOOGLE
+  APPLE
+}
+
+enum rodeoArenaLocation {
+  Indoor
+  Outdoor
+}
+
+enum rodeoArenaGroundConditions {
+  CenterAlly
+  CenterGate
+  SideGateRight
+  SideGateLeft
+}
+
+model User {
+  id                                Int                                 @id @default(autoincrement())
+  firstName                         String?
+  lastName                          String?
+  authProvider                      AuthProvider?
+  email                             String                              @unique
+  password                          String                              @db.Text
+  about                             String?                             @db.Text
+  dob                               DateTime?
+  gender                            String?
+  address                           String?
+  city                              String?
+  state                             String?
+  profileUrl                        String?                             @db.Text
+  isProfileCompleted                Boolean                             @default(false)
+  createdAt                         DateTime                            @default(now())
+  updatedAt                         DateTime                            @updatedAt
+  Horse                             Horse[]
+  Association                       Association[]
+  UserNote                          UserNote[]
+  Vet                               Vet[]
+  HorseHotel                        HorseHotel[]
+  UserHorseFarrier                  UserHorseFarrier[]
+  UserHorseAssociation              UserHorseAssociation[]
+  UserVehicleMaintenanceExpense     UserVehicleMaintenanceExpense[]
+  UserTrailerMaintenanceExpense     UserTrailerMaintenanceExpense[]
+  UserTackExpense                   UserTackExpense[]
+  UserPerformanceClothing           UserPerformanceClothing[]
+  UserTrailerInsuranceExpense       UserTrailerInsuranceExpense[]
+  UserGasExpense                    UserGasExpense[]
+  UserContactInfoMemberships        UserContactInfoMemberships[]
+  UserAssociationMembershipsExpense UserAssociationMembershipsExpense[]
+  UserRodeoExpense                  UserRodeoExpense[]
+  HorseGeneralMaintenanceVeterinary HorseGeneralMaintenanceVeterinary[]
+}
+
+model UserOtp {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  otp       String   @unique
+  isUsed    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserNote {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model Association {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model Vet {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  cnic         String
+  veterinarian String
+  phoneNumber  String
+  city         String
+  state        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  User         User     @relation(fields: [userId], references: [id])
+}
+
+model Horse {
+  id                                    Int                                     @id @default(autoincrement())
+  userId                                Int
+  horseName                             String                                  @unique
+  registrationNumber                    String
+  height                                Int
+  weight                                Int
+  dob                                   DateTime
+  feed                                  String                                  @db.Text
+  maintenanceSupplements                String                                  @db.Text
+  scheduledTime                         DateTime
+  type                                  String
+  createdAt                             DateTime                                @default(now())
+  updatedAt                             DateTime                                @updatedAt
+  User                                  User                                    @relation(fields: [userId], references: [id])
+  HorseImages                           HorseImage[]
+  HorseSupplementsExpense               HorseSupplementsExpense[]
+  HorseMedicationDeliverySystemsExpense HorseMedicationDeliverySystemsExpense[]
+  HorseInsuranceExpense                 HorseInsuranceExpense[]
+  HorseFeedsPurchaseExpense             HorseFeedsPurchaseExpense[]
+  HorseBeddingExpense                   HorseBeddingExpense[]
+  HorseVeterinaryTreatmentExpense       HorseVeterinaryTreatmentExpense[]
+  HorseTruckInsuranceExpense            HorseTruckInsuranceExpense[]
+  UserHorseFarrier                      UserHorseFarrier[]
+  UserHorseAssociation                  UserHorseAssociation[]
+  HorseGeneralMaintenanceVeterinary     HorseGeneralMaintenanceVeterinary[]
+  RodeoAssociationEarning               RodeoAssociationEarning[]
+}
+
+model HorseImage {
+  id        Int      @id @default(autoincrement())
+  horseId   Int
+  horseUrl  String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Horse     Horse    @relation(fields: [horseId], references: [id])
+}
+
+model HorseHotel {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  name        String
+  phoneNumber String
+  email       String
+  address     String
+  stallCost   Int
+  rvHookUp    Boolean
+  rvCost      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  User        User     @relation(fields: [userId], references: [id])
+}
+
+// HORSE EXPENSES TABLE
+
+model HorseSupplementsExpense {
+  id          Int      @id @default(autoincrement())
+  horseId     Int
+  date        DateTime
+  items       String   @db.Text
+  purchasedAt String
+  cost        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Horse       Horse    @relation(fields: [horseId], references: [id])
+}
+
+model HorseMedicationDeliverySystemsExpense {
+  id          Int      @id @default(autoincrement())
+  horseId     Int
+  date        DateTime
+  items       String   @db.Text
+  purchasedAt String
+  cost        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Horse       Horse    @relation(fields: [horseId], references: [id])
+}
+
+model HorseInsuranceExpense {
+  id              Int      @id @default(autoincrement())
+  horseId         Int
+  date            DateTime
+  policyStartDate DateTime
+  policyEndDate   DateTime
+  companyName     String
+  cost            Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  Horse           Horse    @relation(fields: [horseId], references: [id])
+}
+
+model HorseFeedsPurchaseExpense {
+  id        Int      @id @default(autoincrement())
+  horseId   Int
+  date      DateTime
+  items     String   @db.Text
+  cost      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Horse     Horse    @relation(fields: [horseId], references: [id])
+}
+
+model HorseBeddingExpense {
+  id        Int      @id @default(autoincrement())
+  horseId   Int
+  date      DateTime
+  location  String
+  cost      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Horse     Horse    @relation(fields: [horseId], references: [id])
+}
+
+model UserHorseAssociation {
+  id                  Int                   @id @default(autoincrement())
+  userId              Int
+  horseId             Int
+  name                String
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  User                User                  @relation(fields: [userId], references: [id])
+  Horse               Horse                 @relation(fields: [horseId], references: [id])
+  AssociationEarnings AssociationEarnings[]
+}
+
+model AssociationEarnings {
+  id                     Int                  @id @default(autoincrement())
+  userHorseAssociationId Int
+  date                   DateTime
+  location               String
+  cost                   Int
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  UserHorseAssociation   UserHorseAssociation @relation(fields: [userHorseAssociationId], references: [id])
+}
+
+model HorseVeterinaryTreatmentExpense {
+  id        Int      @id @default(autoincrement())
+  horseId   Int
+  date      DateTime
+  illness   String
+  treatment Boolean
+  result    String
+  cost      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Horse     Horse    @relation(fields: [horseId], references: [id])
+}
+
+model HorseGeneralMaintenanceVeterinary {
+  id                  Int                   @id @default(autoincrement())
+  userId              Int
+  horseId             Int
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  User                User                  @relation(fields: [userId], references: [id])
+  Horse               Horse                 @relation(fields: [horseId], references: [id])
+  HorseVaccineExpense HorseVaccineExpense[]
+  HorseWomingExpense  HorseWomingExpense[]
+}
+
+model HorseVaccineExpense {
+  id           Int                               @id @default(autoincrement())
+  veterinaryId Int
+  vaccineName  String
+  date         DateTime
+  cost         Int
+  createdAt    DateTime                          @default(now())
+  updatedAt    DateTime                          @updatedAt
+  Veterinary   HorseGeneralMaintenanceVeterinary @relation(fields: [veterinaryId], references: [id])
+}
+
+model HorseWomingExpense {
+  id           Int                               @id @default(autoincrement())
+  veterinaryId Int
+  Date         DateTime
+  brand        String
+  cost         Int
+  createdAt    DateTime                          @default(now())
+  updatedAt    DateTime                          @updatedAt
+  Veterinary   HorseGeneralMaintenanceVeterinary @relation(fields: [veterinaryId], references: [id])
+}
+
+model HorseTruckInsuranceExpense {
+  id              Int      @id @default(autoincrement())
+  horseId         Int
+  date            DateTime
+  truckName       String
+  policyStartDate DateTime
+  policyEndDate   DateTime
+  companyName     String
+  cost            Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  Horse           Horse    @relation(fields: [horseId], references: [id])
+}
+
+model UserHorseFarrier {
+  id                  Int                   @id @default(autoincrement())
+  userId              Int
+  horseId             Int
+  farrierName         String
+  phoneNumber         String
+  shoeSize            String
+  nailSize            String
+  nailType            String
+  shoeingNotes        String                @db.Text
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  User                User                  @relation(fields: [userId], references: [id])
+  Horse               Horse                 @relation(fields: [horseId], references: [id])
+  HorseFarrierExpense HorseFarrierExpense[]
+}
+
+model HorseFarrierExpense {
+  id                 Int              @id @default(autoincrement())
+  userHorseFarrierId Int
+  date               DateTime
+  cost               Int
+  note               String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  UserHorseFarrier   UserHorseFarrier @relation(fields: [userHorseFarrierId], references: [id])
+}
+
+// USER EXPENSES TABLE
+model UserVehicleMaintenanceExpense {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  date      DateTime
+  repair    String   @db.Text
+  mileage   Int
+  cost      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model UserTrailerMaintenanceExpense {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  date      DateTime
+  repair    String   @db.Text
+  mileage   Int
+  cost      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model UserTackExpense {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  date      DateTime
+  item      String   @db.Text
+  cost      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model UserPerformanceClothing {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  date        DateTime
+  item        String   @db.Text
+  purchasedAt String
+  cost        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  User        User     @relation(fields: [userId], references: [id])
+}
+
+model UserTrailerInsuranceExpense {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  date            DateTime
+  trailer         String
+  policyStartDate DateTime
+  policyEndDate   DateTime
+  companyName     String
+  cost            Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  User            User     @relation(fields: [userId], references: [id])
+}
+
+model UserGasExpense {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  date      DateTime
+  location  String
+  miles     Int
+  cost      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model UserAssociationMembershipsExpense {
+  id               Int      @id @default(autoincrement())
+  userId           Int
+  association      String
+  membershipNumber String
+  phoneNumber      String
+  cost             Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  User             User     @relation(fields: [userId], references: [id])
+}
+
+model UserContactInfoMemberships {
+  id               Int      @id @default(autoincrement())
+  userId           Int
+  name             String
+  phoneNumber      String
+  email            String
+  emergencyContact String
+  membershipNumber String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  User             User     @relation(fields: [userId], references: [id])
+}
+
+// USER RODEO EXPENSES AND RODEO RELATED TABLE
+
+model UserRodeoExpense {
+  id                   Int                    @id @default(autoincrement())
+  userId               Int
+  eventName            String
+  location             String
+  circuitAssociation   String
+  moneyAdded           Int
+  edo                  String
+  ec                   String
+  confirmation         String
+  firstRunPreference   String
+  secondRunPreference  String
+  callBackDate         DateTime
+  buddy                String
+  cardNumber           String
+  tradeDeadline        String
+  trade                String
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  User                 User                   @relation(fields: [userId], references: [id])
+  RodeoDraw            RodeoDraw?
+  RodeoArena           RodeoArena?
+  RodeoResults         RodeoResults?
+  StallsBoarding       StallsBoarding[]
+  Meals                Meals[]
+  Lodging              Lodging[]
+  EntryFees            EntryFees[]
+  Bedding              Bedding[]
+  UserRodeoAssociation UserRodeoAssociation[]
+}
+
+model RodeoDraw {
+  id                 Int              @id @default(autoincrement())
+  userRodeoExpenseId Int              @unique
+  firstGo            String
+  secondGo           String
+  shortGo            String
+  entries            String
+  stallsAvailable    String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  UserRodeoExpense   UserRodeoExpense @relation(fields: [userRodeoExpenseId], references: [id])
+}
+
+model RodeoArena {
+  id                 Int                @id @default(autoincrement())
+  userRodeoExpenseId Int                @unique
+  arenaLocation      String
+  travelTime         DateTime           @db.Time()
+  miles              Int
+  direction          String
+  arenaSize          Int
+  patternSize        Int
+  location           rodeoArenaLocation
+  groundConditions   rodeoArenaLocation
+  notes              String             @db.Text
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  UserRodeoExpense   UserRodeoExpense   @relation(fields: [userRodeoExpenseId], references: [id])
+}
+
+model RodeoResults {
+  id                   Int              @id @default(autoincrement())
+  userRodeoExpenseId   Int              @unique
+  firstGoWinningTime   DateTime         @db.Time()
+  firstGoMyTime        DateTime         @db.Time()
+  secondGoWinningTime  DateTime         @db.Time()
+  secondGoMyTime       DateTime         @db.Time()
+  averageWinningTime   DateTime         @db.Time()
+  averageWinningMyTime DateTime         @db.Time()
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  UserRodeoExpense     UserRodeoExpense @relation(fields: [userRodeoExpenseId], references: [id])
+}
+
+model StallsBoarding {
+  id               Int              @id @default(autoincrement())
+  rodeoId          Int
+  date             DateTime
+  location         String
+  cost             Int
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  UserRodeoExpense UserRodeoExpense @relation(fields: [rodeoId], references: [id])
+}
+
+model Meals {
+  id               Int              @id @default(autoincrement())
+  rodeoId          Int
+  restaurant       String
+  eventName        String
+  cost             Int
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  UserRodeoExpense UserRodeoExpense @relation(fields: [rodeoId], references: [id])
+}
+
+model Lodging {
+  id               Int              @id @default(autoincrement())
+  rodeoId          Int
+  date             DateTime
+  location         String
+  cost             Int
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  UserRodeoExpense UserRodeoExpense @relation(fields: [rodeoId], references: [id])
+}
+
+model EntryFees {
+  id               Int              @id @default(autoincrement())
+  rodeoId          Int
+  date             DateTime
+  location         String
+  fees             Int
+  circuitFees      Int
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  UserRodeoExpense UserRodeoExpense @relation(fields: [rodeoId], references: [id])
+}
+
+model Bedding {
+  id               Int              @id @default(autoincrement())
+  rodeoId          Int
+  date             DateTime
+  location         String
+  cost             Int
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  UserRodeoExpense UserRodeoExpense @relation(fields: [rodeoId], references: [id])
+}
+
+model UserRodeoAssociation {
+  id                      Int                       @id @default(autoincrement())
+  rodeoId                 Int
+  name                    String
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  UserRodeoExpense        UserRodeoExpense          @relation(fields: [rodeoId], references: [id])
+  RodeoAssociationEarning RodeoAssociationEarning[]
+}
+
+model RodeoAssociationEarning {
+  id                 Int                  @id @default(autoincrement())
+  rodeoAssociationId Int
+  horseId            Int
+  date               DateTime
+  earned             Int
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  RodeoAssociationId UserRodeoAssociation @relation(fields: [rodeoAssociationId], references: [id])
+  Horse              Horse                @relation(fields: [horseId], references: [id])
+}
