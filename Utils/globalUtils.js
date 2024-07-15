@@ -1,6 +1,6 @@
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const jwt = require("jsonwebtoken");
-// const s3 = require("../configs/s3.config");
+const s3 = require("../configs/s3.config");
 const fs = require("fs");
 const transporter = require("../Configs/nodemailer.config");
 
