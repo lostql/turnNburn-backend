@@ -4,9 +4,14 @@ const createProfileSchema = z.object({
   firstName: z.string().trim().min(1, { message: "First name is required" }),
   lastName: z.string().trim().min(1, { message: "Last name is required" }),
   gender: z.string().trim().min(1, { message: "Gender is required" }),
-  dob: z.string().refine((value) => !isNaN(Date.parse(value)), {
-    message: "Date of birth is required and should be a valid date",
-  }),
+  dob: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, {
+      message: "Date of birth must be in YYYY-MM-DD format",
+    })
+    .refine((value) => !isNaN(Date.parse(value)), {
+      message: "Date of birth is required and should be a valid date",
+    }),
   address: z
     .string()
     .min(1, { message: "Address is required" })

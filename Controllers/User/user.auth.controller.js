@@ -136,22 +136,6 @@ class UserAuthController {
       next(error);
     }
   }
-
-  //if profile is not completed then fe will send me payload except email and password
-  static async createProfile(req, res, next) {
-    try {
-      const userId = req.user.id;
-      const userPayload = Utils.removeNullValuesFromObject(req.body);
-      const user = await prisma.user.create({
-        data: {
-          ...userPayload,
-          isProfileCompleted: true,
-        },
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
 }
 
 module.exports = UserAuthController;
