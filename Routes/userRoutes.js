@@ -2,7 +2,7 @@ const UserNotesController = require("../Controllers/User/notes/user.notes.contro
 const UserAuthController = require("../Controllers/User/user.auth.controller");
 const UserProfileController = require("../Controllers/User/user.profile.controller");
 const { verifyToken } = require("../Middlewares/auth.middleware");
-const isImageExists = require("../Middlewares/isImageRequired.middleware");
+const isFileExists = require("../Middlewares/files.middleware");
 const upload = require("../Middlewares/multer.middleware");
 const { validateParams } = require("../Middlewares/validateParams");
 const { validateSchema } = require("../Middlewares/validateSchema");
@@ -43,7 +43,7 @@ userRouter.post(
   "/create-profile",
   verifyToken,
   upload.single("profileImage"),
-  isImageExists("Profile Picture is required"),
+  isFileExists("Profile Picture is required"),
   validateSchema(createProfileSchema),
   UserProfileController.createProfile
 );

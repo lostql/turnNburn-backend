@@ -116,6 +116,7 @@ model Horse {
   maintenanceSupplements                String                                  @db.Text
   scheduledTime                         DateTime
   type                                  String
+  volume                                Float
   createdAt                             DateTime                                @default(now())
   updatedAt                             DateTime                                @updatedAt
   User                                  User                                    @relation(fields: [userId], references: [id])
