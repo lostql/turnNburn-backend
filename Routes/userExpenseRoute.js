@@ -1,4 +1,5 @@
 const TireReplacementExpenseController = require("../Controllers/User/expenses/tire-replacement/tire-replacement.controller");
+const TrackExpenseController = require("../Controllers/User/expenses/track/track.controller");
 const TrailerMaintenanceController = require("../Controllers/User/expenses/trailer-maintenance/trailer-maintenance.controller");
 const VehicleMaintenanceController = require("../Controllers/User/expenses/vehicle-maintenance/vehicle-maintenance.controller");
 const { verifyToken } = require("../Middlewares/auth.middleware");
@@ -9,6 +10,8 @@ const addVehicleExpenseSchema = require("../Schemas/User/Expenses/addVehicleExpe
 const addTireReplacementExpense = require("../Schemas/User/Expenses/tire-replacement/addTireReplacementExpenseSchema");
 const listTireReplacementSchema = require("../Schemas/User/Expenses/tire-replacement/listTireReplacementExpenseSchema");
 const updateTireReplacementExpenseSchema = require("../Schemas/User/Expenses/tire-replacement/updateTireReplacementExpenseSchema");
+const createTrackExpenseSchema = require("../Schemas/User/Expenses/track-expense/createTrackExpenseSchema");
+const updateTrackExpenseSchema = require("../Schemas/User/Expenses/track-expense/updateTrackExpenseSchema");
 const addTrailerMaintenanceSchema = require("../Schemas/User/Expenses/trailer-maintenance/addTrailerMaintenanceSchema");
 const updateTrailerMaintenanceSchema = require("../Schemas/User/Expenses/trailer-maintenance/updateTrailerMaintenanceSchema");
 const updateVehicleExpenseSchema = require("../Schemas/User/Expenses/updateVehicleExpenseSchema");
@@ -145,6 +148,42 @@ userExpenseRouter.delete(
   verifyToken,
   validateParams(getDetailWithIdSchema),
   TireReplacementExpenseController.deleteTireReplacementExpense
+);
+
+/*************************************************USER TRACK EXPENSE****************************/
+
+userExpenseRouter.post(
+  "/track",
+  verifyToken,
+  validateSchema(createTrackExpenseSchema),
+  TrackExpenseController.createTrackExpense
+);
+
+userExpenseRouter.patch(
+  "/track/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  validateSchema(updateTrackExpenseSchema),
+  TrackExpenseController.updateTrackExpense
+);
+
+userExpenseRouter.get(
+  "/track",
+  verifyToken,
+  TrackExpenseController.listTrackExpenses
+);
+
+userExpenseRouter.get(
+  "/track/total-cost",
+  verifyToken,
+  TrackExpenseController.fetchTotalCost
+);
+
+userExpenseRouter.get(
+  "/track-detail/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  TrackExpenseController.getTrackExpenseDetail
 );
 
 module.exports = userExpenseRouter;
