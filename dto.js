@@ -14,6 +14,16 @@ class DTO {
       maintenanceSupplements: data.maintenanceSupplements,
     };
   }
+
+  static transformVehicleMaintenanceExpensePayload(data, userId) {
+    return {
+      userId,
+      date: new Date(data.date),
+      cost: Number(data.cost),
+      mileage: Number(data.mileage),
+      repair: data.repair,
+    };
+  }
 }
 
 module.exports = DTO;
