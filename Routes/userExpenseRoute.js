@@ -43,4 +43,10 @@ userExpenseRouter.delete(
   validateParams(getDetailWithIdSchema),
   VehicleMaintenanceController.deleteVehicleMaintenanceExpense
 );
+
+userExpenseRouter.get(
+  "/total-cost/vehicle-maintenance",
+  verifyToken,
+  VehicleMaintenanceController.getTotalExpenseForVehicleMaintenance
+);
 module.exports = userExpenseRouter;

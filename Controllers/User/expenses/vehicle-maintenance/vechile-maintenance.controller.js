@@ -111,6 +111,22 @@ class VehicleMaintenanceController {
       next(error);
     }
   }
+
+  static async getTotalExpenseForVehicleMaintenance(req, res, next) {
+    try {
+      const totalCost = await prisma.userVehicleMaintenanceExpense.aggregate({
+        _sum: {
+          cost: true,
+        },
+        where: {
+          userId: req.user.id,
+        },
+      });
+      handleOK(res, 200, totalCost._sum.cost, "total cost fetched");
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = VehicleMaintenanceController;
