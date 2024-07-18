@@ -15,6 +15,11 @@ enum AuthProvider {
   APPLE
 }
 
+enum TireReplacementTypes {
+  Trailer
+  Truck
+}
+
 enum rodeoArenaLocation {
   Indoor
   Outdoor
@@ -62,6 +67,7 @@ model User {
   UserRodeoExpense                  UserRodeoExpense[]
   HorseGeneralMaintenanceVeterinary HorseGeneralMaintenanceVeterinary[]
   OtherServices                     OtherService[]
+  TireReplacement                   TireReplacementExpense[]
 }
 
 model UserOtp {
@@ -368,6 +374,28 @@ model UserTrailerMaintenanceExpense {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   User      User     @relation(fields: [userId], references: [id])
+}
+
+model TireReplacementType {
+  id              Int                      @id @default(autoincrement())
+  name            TireReplacementTypes     @unique
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  TireReplacement TireReplacementExpense[]
+}
+
+model TireReplacementExpense {
+  id                    Int                 @id @default(autoincrement())
+  userId                Int
+  tireReplacementTypeId Int
+  date                  DateTime
+  cost                  Int
+  mileage               Int
+  brand                 String
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  User                  User                @relation(fields: [userId], references: [id])
+  TireReplacementType   TireReplacementType @relation(fields: [tireReplacementTypeId], references: [id])
 }
 
 model UserTackExpense {

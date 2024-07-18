@@ -5,4 +5,8 @@ module.exports = {
     GOOGLE: "GOOGLE",
     APPLE: "APPLE",
   },
+  TireReplacementType: {
+    TRAILER: "Trailer",
+    TRUCK: "Truck",
+  },
 };
