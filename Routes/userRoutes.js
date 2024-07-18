@@ -1,5 +1,6 @@
 const HorseHotelController = require("../Controllers/User/horse-hotel/horse-hotel.controller");
 const UserNotesController = require("../Controllers/User/notes/user.notes.controller");
+const OtherServicesController = require("../Controllers/User/other-services/other-services.controller");
 const UserAuthController = require("../Controllers/User/user.auth.controller");
 const UserProfileController = require("../Controllers/User/user.profile.controller");
 const VetLocations = require("../Controllers/User/vet-locations/vet-location.controller");
@@ -16,6 +17,8 @@ const {
 } = require("../Schemas/Notes/updateOrDeleteSchema");
 const createProfileSchema = require("../Schemas/User/createProfileSchema");
 const createHorseHotelSchema = require("../Schemas/User/Horse-Hotel/createHorseHotelSchema");
+const createOtherServiceSchema = require("../Schemas/User/Other-services/createOtherServiceSchema");
+const updateOtherServiceSchema = require("../Schemas/User/Other-services/updateOtherServiceSchema");
 const signInSchema = require("../Schemas/User/signInSchema");
 const signUpWithEmailSchema = require("../Schemas/User/signUpWithEmailSchema");
 const verifyOTPSchema = require("../Schemas/User/verifyOTPschema");
@@ -145,6 +148,43 @@ userRouter.delete(
   verifyToken,
   validateParams(getDetailWithIdSchema),
   HorseHotelController.deleteHorseHotel
+);
+
+// ***********************************************USER OTHER SERVICE ***************************************************
+
+userRouter.post(
+  "/other-service/create",
+  verifyToken,
+  validateSchema(createOtherServiceSchema),
+  OtherServicesController.addOtherServices
+);
+
+userRouter.get(
+  "/other-service/list",
+  verifyToken,
+  OtherServicesController.listOtherServices
+);
+
+userRouter.get(
+  "/other-service/detail/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  OtherServicesController.getDetail
+);
+
+userRouter.delete(
+  "/other-service/delete/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  OtherServicesController.deleteOtherService
+);
+
+userRouter.patch(
+  "/other-service/update/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  validateSchema(updateOtherServiceSchema),
+  OtherServicesController.updateOtherService
 );
 
 module.exports = userRouter;

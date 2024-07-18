@@ -69,6 +69,15 @@ class Utils {
       throw new Error(error);
     }
   }
+
+  static async findOneWithIdAndUserId(model, id, userId) {
+    return model.findFirst({
+      where: {
+        id: Number(id),
+        userId: userId,
+      },
+    });
+  }
 }
 
 module.exports = Utils;

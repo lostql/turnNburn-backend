@@ -61,6 +61,7 @@ model User {
   UserAssociationMembershipsExpense UserAssociationMembershipsExpense[]
   UserRodeoExpense                  UserRodeoExpense[]
   HorseGeneralMaintenanceVeterinary HorseGeneralMaintenanceVeterinary[]
+  OtherServices                     OtherService[]
 }
 
 model UserOtp {
@@ -102,6 +103,19 @@ model Vet {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   User         User     @relation(fields: [userId], references: [id])
+}
+
+model OtherService {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  name        String
+  phoneNumber String
+  email       String
+  address     String
+  cost        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  User        User     @relation(fields: [userId], references: [id])
 }
 
 model Horse {
