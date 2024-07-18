@@ -20,6 +20,7 @@ const signInSchema = require("../Schemas/User/signInSchema");
 const signUpWithEmailSchema = require("../Schemas/User/signUpWithEmailSchema");
 const verifyOTPSchema = require("../Schemas/User/verifyOTPschema");
 const addVetLocationSchema = require("../Schemas/User/Vet-locations/createVetLocationSchema");
+const updateVetLocation = require("../Schemas/User/Vet-locations/updateVetLocationSchema");
 
 const userRouter = require("express").Router();
 
@@ -93,6 +94,30 @@ userRouter.post(
   VetLocations.addVetLocations
 );
 
+userRouter.get("/vet/list", verifyToken, VetLocations.listVetLocations);
+
+userRouter.get(
+  "/vet/detail/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  VetLocations.getSingleVetLocation
+);
+
+userRouter.delete(
+  "/vet/delete/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  VetLocations.deleteVetLocation
+);
+
+userRouter.patch(
+  "/vet/update/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  validateSchema(updateVetLocation),
+  VetLocations.updateVetLocation
+);
+
 // ***********************************************USER HORSE HOTEL***************************************************
 
 userRouter.post(
@@ -121,4 +146,5 @@ userRouter.delete(
   validateParams(getDetailWithIdSchema),
   HorseHotelController.deleteHorseHotel
 );
+
 module.exports = userRouter;

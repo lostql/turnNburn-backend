@@ -94,7 +94,7 @@ model Association {
 model Vet {
   id           Int      @id @default(autoincrement())
   userId       Int
-  cnic         String
+  clinic       String
   veterinarian String
   phoneNumber  String
   city         String
