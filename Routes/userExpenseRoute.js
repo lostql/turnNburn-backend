@@ -1,6 +1,7 @@
 const PerformanceClothingExpenseController = require("../Controllers/User/expenses/performance-clothing/performance-clothing.controller");
 const TireReplacementExpenseController = require("../Controllers/User/expenses/tire-replacement/tire-replacement.controller");
 const TrackExpenseController = require("../Controllers/User/expenses/track/track.controller");
+const TrailerInsuranceController = require("../Controllers/User/expenses/trailer-insurance/trailer-insurance.controller");
 const TrailerMaintenanceController = require("../Controllers/User/expenses/trailer-maintenance/trailer-maintenance.controller");
 const VehicleMaintenanceController = require("../Controllers/User/expenses/vehicle-maintenance/vehicle-maintenance.controller");
 const { verifyToken } = require("../Middlewares/auth.middleware");
@@ -15,6 +16,8 @@ const listTireReplacementSchema = require("../Schemas/User/Expenses/tire-replace
 const updateTireReplacementExpenseSchema = require("../Schemas/User/Expenses/tire-replacement/updateTireReplacementExpenseSchema");
 const createTrackExpenseSchema = require("../Schemas/User/Expenses/track-expense/createTrackExpenseSchema");
 const updateTrackExpenseSchema = require("../Schemas/User/Expenses/track-expense/updateTrackExpenseSchema");
+const createTrailerInsuranceSchema = require("../Schemas/User/Expenses/trailer-insurance/createTrailerInsuranceExpenseSchema");
+const updateTrailerInsuranceExpenseSchema = require("../Schemas/User/Expenses/trailer-insurance/updateTrailerInsuranceExpenseSchema");
 const addTrailerMaintenanceSchema = require("../Schemas/User/Expenses/trailer-maintenance/addTrailerMaintenanceSchema");
 const updateTrailerMaintenanceSchema = require("../Schemas/User/Expenses/trailer-maintenance/updateTrailerMaintenanceSchema");
 const updateVehicleExpenseSchema = require("../Schemas/User/Expenses/updateVehicleExpenseSchema");
@@ -231,4 +234,48 @@ userExpenseRouter.get(
   verifyToken,
   PerformanceClothingExpenseController.fetchTotalCost
 );
+
+// *****************************************TRAILER INSURANCE EXPENSE *******************************
+
+userExpenseRouter.post(
+  "/trailer-insurance",
+  verifyToken,
+  validateSchema(createTrailerInsuranceSchema),
+  TrailerInsuranceController.createtrailerInsuranceExpense
+);
+
+userExpenseRouter.patch(
+  "/trailer-insurance/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  validateSchema(updateTrailerInsuranceExpenseSchema),
+  TrailerInsuranceController.updateTrailerInsuranceExpense
+);
+
+userExpenseRouter.get(
+  "/trailer-insurance/detail/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  TrailerInsuranceController.detail
+);
+
+userExpenseRouter.get(
+  "/trailer-insurance",
+  verifyToken,
+  TrailerInsuranceController.list
+);
+
+userExpenseRouter.delete(
+  "/trailer-insurance/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  TrailerInsuranceController.remove
+);
+
+userExpenseRouter.get(
+  "/trailer-insurance/total-cost",
+  verifyToken,
+  TrailerInsuranceController.totalCost
+);
+
 module.exports = userExpenseRouter;
