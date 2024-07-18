@@ -15,4 +15,7 @@ userHorseRouter.post(
   validateSchema(createHorseSchema),
   UserHorseController.createHorse
 );
+
+userHorseRouter.get("/list", verifyToken, UserHorseController.getAllUserHorses);
+
 module.exports = userHorseRouter;

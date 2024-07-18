@@ -46,6 +46,27 @@ class UserHorseController {
       next(error);
     }
   }
+
+  static async getAllUserHorses(req, res, next) {
+    try {
+      const userId = req.user.id;
+      const horses = await prisma.horse.findMany({
+        where: {
+          userId,
+        },
+        include: {
+          HorseImages: {
+            select: {
+              horseUrl: true,
+            },
+          },
+        },
+      });
+      handleOK(res, 200, horses, "successfully fetched all horses for a user");
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = UserHorseController;
