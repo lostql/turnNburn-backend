@@ -1,3 +1,4 @@
+const PerformanceClothingExpenseController = require("../Controllers/User/expenses/performance-clothing/performance-clothing.controller");
 const TireReplacementExpenseController = require("../Controllers/User/expenses/tire-replacement/tire-replacement.controller");
 const TrackExpenseController = require("../Controllers/User/expenses/track/track.controller");
 const TrailerMaintenanceController = require("../Controllers/User/expenses/trailer-maintenance/trailer-maintenance.controller");
@@ -7,6 +8,8 @@ const { validateParams } = require("../Middlewares/validateParams");
 const { validateSchema } = require("../Middlewares/validateSchema");
 const getDetailWithIdSchema = require("../Schemas/common/getDetailWithIdSchema");
 const addVehicleExpenseSchema = require("../Schemas/User/Expenses/addVehicleExpenseSchema");
+const createPerformanceClothingExpenseSchema = require("../Schemas/User/Expenses/performance-clothing/createPerformanceClothingExpenseSchema");
+const updatePerformanceClothingSchema = require("../Schemas/User/Expenses/performance-clothing/updatePerformanceClothingSchema");
 const addTireReplacementExpense = require("../Schemas/User/Expenses/tire-replacement/addTireReplacementExpenseSchema");
 const listTireReplacementSchema = require("../Schemas/User/Expenses/tire-replacement/listTireReplacementExpenseSchema");
 const updateTireReplacementExpenseSchema = require("../Schemas/User/Expenses/tire-replacement/updateTireReplacementExpenseSchema");
@@ -186,4 +189,46 @@ userExpenseRouter.get(
   TrackExpenseController.getTrackExpenseDetail
 );
 
+// *****************************************************PERFORMANCE CLOTHING EXPENSE ******************************
+
+userExpenseRouter.post(
+  "/performance-clothing",
+  verifyToken,
+  validateSchema(createPerformanceClothingExpenseSchema),
+  PerformanceClothingExpenseController.addPerformanceClothingExpense
+);
+
+userExpenseRouter.patch(
+  "/performance-clothing/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  validateSchema(updatePerformanceClothingSchema),
+  PerformanceClothingExpenseController.updatePerformanceClothingExpense
+);
+
+userExpenseRouter.get(
+  "/performance-clothing",
+  verifyToken,
+  PerformanceClothingExpenseController.list
+);
+
+userExpenseRouter.get(
+  "/performance-clothing/detail/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  PerformanceClothingExpenseController.detail
+);
+
+userExpenseRouter.delete(
+  "/performance-clothing/:id",
+  verifyToken,
+  validateParams(getDetailWithIdSchema),
+  PerformanceClothingExpenseController.remove
+);
+
+userExpenseRouter.get(
+  "/performance-clothing/total-cost",
+  verifyToken,
+  PerformanceClothingExpenseController.fetchTotalCost
+);
 module.exports = userExpenseRouter;
